@@ -42,6 +42,8 @@ export interface CanvasFurnitureItem {
   y: number;
   width: number;
   height: number;
+  rotationX?: number;
+  rotationY?: number;
   rotation: number;
   zIndex: number;
 }

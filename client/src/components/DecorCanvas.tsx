@@ -1,5 +1,5 @@
 import { useRef, useState, useCallback, useEffect } from "react";
-import { Trash2, Copy } from "lucide-react";
+import { Trash2, Copy, RotateCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { Furniture, CanvasFurnitureItem } from "@shared/schema";
 
@@ -157,8 +157,8 @@ export function DecorCanvas({
   return (
     <div
       ref={canvasRef}
-      className="relative flex-1 bg-background overflow-auto"
-      onClick={() => onSelectItem(null)}
+      className="relative flex-1 bg-background overflow-auto z-0"
+      onClick={(e) => { if (e.target === e.currentTarget) onSelectItem(null); }}
       data-testid="canvas-workspace"
     >
       <div className="min-h-[70vh] relative" style={{ minWidth: "100%" }}>
@@ -187,7 +187,7 @@ export function DecorCanvas({
                 top: `${item.y}px`,
                 width: `${item.width}px`,
                 height: `${item.height}px`,
-                transform: `rotate(${item.rotation}deg)`,
+                transform: `perspective(800px) rotateX(${(item as any).rotationX ?? 0}deg) rotateY(${(item as any).rotationY ?? 0}deg) rotate(${item.rotation}deg)`,
                 zIndex: item.zIndex,
               }}
               onMouseDown={(e) => handleMouseDown(e, item.furnitureId)}
@@ -200,6 +200,7 @@ export function DecorCanvas({
                 draggable={false}
                 style={{
                   filter: "drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1))",
+                  mixBlendMode: "multiply",
                 }}
               />
 
@@ -209,6 +210,19 @@ export function DecorCanvas({
                     className="absolute -top-12 left-1/2 -translate-x-1/2 flex gap-2"
                     onMouseDown={(e) => e.stopPropagation()}
                   >
+                    <Button
+                      size="icon"
+                      variant="secondary"
+                      className="h-8 w-8"
+                      onMouseDown={(e) => {
+                        // iniciar rotação ao arrastar o botão
+                        handleRotateStart(e);
+                      }}
+                      data-testid="button-rotate"
+                      aria-label="Rodar móvel"
+                    >
+                      <RotateCw className="h-4 w-4" />
+                    </Button>
                     <Button
                       size="icon"
                       variant="secondary"

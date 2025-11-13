@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+
+body {
+  @apply bg-gray-100 text-gray-800;
+}
+
 /* LIGHT MODE */
 :root {
   --button-outline: rgba(0,0,0, .10);

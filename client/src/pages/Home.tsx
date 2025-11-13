@@ -219,6 +219,43 @@ export default function Home() {
     document.getElementById("file-input")?.click();
   }, []);
 
+  const handleDeleteSelectedItem = useCallback(() => {
+    if (!selectedItemId) return;
+    
+    const newItems = canvasItems.filter((item) => item.furnitureId !== selectedItemId);
+    handleUpdateItems(newItems, true);
+    setSelectedItemId(null);
+    
+    toast({
+      title: "Item eliminado",
+      description: "O móvel foi removido do canvas.",
+    });
+  }, [selectedItemId, canvasItems, handleUpdateItems, toast]);
+
+  const handleDuplicateSelectedItem = useCallback(() => {
+    if (!selectedItemId) return;
+    
+    const item = canvasItems.find((i) => i.furnitureId === selectedItemId);
+    if (!item) return;
+    
+    const newItem: CanvasFurnitureItem = {
+      ...item,
+      furnitureId: `instance-${Date.now()}`,
+      x: item.x + 20,
+      y: item.y + 20,
+      zIndex: Math.max(...canvasItems.map((i) => i.zIndex), 0) + 1,
+    };
+    
+    const newItems = [...canvasItems, newItem];
+    handleUpdateItems(newItems, true);
+    setSelectedItemId(newItem.furnitureId);
+    
+    toast({
+      title: "Item duplicado",
+      description: "O móvel foi duplicado com sucesso.",
+    });
+  }, [selectedItemId, canvasItems, handleUpdateItems, toast]);
+
   const selectedItem = canvasItems.find(
     (item) => item.furnitureId === selectedItemId
   );
@@ -250,14 +287,16 @@ export default function Home() {
       />
 
       <div className="flex-1 flex overflow-hidden">
-        <div className="w-[280px]">
+        {/* Mobília no lado ESQUERDO - LARGURA AUMENTADA */}
+        <div className="w-[320px] border-r bg-background">
           <FurnitureLibrary
             furniture={furniture}
             onAddFurniture={handleAddFurniture}
           />
         </div>
 
-        <div className="flex-1 overflow-auto" ref={canvasRef}>
+        {/* ÁREA DE DIVISÃO (CANVAS) - MAIOR ESPAÇO */}
+        <div className="flex-[3] overflow-auto bg-gray-50 dark:bg-gray-900" ref={canvasRef}>
           {roomImage ? (
             <DecorCanvas
               roomImage={roomImage}
@@ -272,10 +311,15 @@ export default function Home() {
           )}
         </div>
 
-        <PropertiesPanel
-          selectedItem={selectedItem || null}
-          onUpdateItem={handleUpdateSelectedItem}
-        />
+        {/* PROPRIEDADES SEMPRE VISÍVEIS - LARGURA AUMENTADA */}
+        <div className="w-[300px] border-l bg-background">
+          <PropertiesPanel
+            selectedItem={selectedItem ?? null}
+            onUpdateItem={handleUpdateSelectedItem}
+            onDeleteItem={handleDeleteSelectedItem}
+            onDuplicateItem={handleDuplicateSelectedItem}
+          />
+        </div>
       </div>
 
       <input

@@ -1,4 +1,4 @@
-import { type Furniture, type InsertFurniture, type Project, type InsertProject } from "@shared/schema";
+import { type Furniture, type InsertFurniture, type Project, type InsertProject } from "../shared/schema";
 import { randomUUID } from "crypto";
 
 export interface IStorage {
@@ -7,6 +7,7 @@ export interface IStorage {
   getProject(id: string): Promise<Project | undefined>;
   createProject(project: InsertProject): Promise<Project>;
 }
+
 
 export class MemStorage implements IStorage {
   private furniture: Map<string, Furniture>;
@@ -24,7 +25,7 @@ export class MemStorage implements IStorage {
         id: "sofa-1",
         name: "Sofá Moderno Cinzento",
         category: "living",
-        imageUrl: "/attached_assets/generated_images/Modern_gray_sofa_furniture_ba24cb6a.png",
+        imageUrl: "/generated_images/Modern_gray_sofa_furniture_ba24cb6a.png",
         style: "Moderno",
         price: "€899",
         brand: "DecorAR",
@@ -33,7 +34,7 @@ export class MemStorage implements IStorage {
         id: "coffee-table-1",
         name: "Mesa de Centro Madeira",
         category: "living",
-        imageUrl: "/attached_assets/generated_images/Wooden_coffee_table_furniture_db5c91e8.png",
+        imageUrl: "/generated_images/Wooden_coffee_table_furniture_db5c91e8.png",
         style: "Escandinavo",
         price: "€249",
         brand: "DecorAR",
@@ -121,6 +122,7 @@ export class MemStorage implements IStorage {
     this.projects.set(id, project);
     return project;
   }
+
 }
 
 export const storage = new MemStorage();

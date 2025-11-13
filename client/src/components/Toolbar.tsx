@@ -12,6 +12,7 @@ interface ToolbarProps {
   canUndo: boolean;
   canRedo: boolean;
   hasImage: boolean;
+  onLogout?: () => void;
 }
 
 export function Toolbar({
@@ -23,6 +24,7 @@ export function Toolbar({
   canUndo,
   canRedo,
   hasImage,
+  onLogout,
 }: ToolbarProps) {
   return (
     <div className="h-16 bg-background border-b border-border flex items-center justify-between px-4 gap-4">
