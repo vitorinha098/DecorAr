@@ -1,6 +1,12 @@
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
+import path from "path";
+import { fileURLToPath } from "url";
+
+// Para ES Modules: define __dirname
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 
@@ -15,6 +21,18 @@ app.use(express.json({
   }
 }));
 app.use(express.urlencoded({ extended: false }));
+
+app.use(
+  "/generated_images",
+  express.static(path.join(__dirname, "generated_images"))
+);
+
+// Serve a pasta generated_images dentro do server
+app.use(
+  "/generated_images",
+  express.static(path.join(__dirname, "generated_images"))
+);
+
 
 app.use((req, res, next) => {
   const start = Date.now();
